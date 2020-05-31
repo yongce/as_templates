@@ -9,7 +9,11 @@ apply plugin: 'kotlin-android-extensions'
 </#macro>
 
 <#macro addKotlinDependencies>
-<#if generateKotlin>${getConfigurationName("compile")} "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"</#if>
+<#if generateKotlin>
+${getConfigurationName("compile")} deps.kotlin.stdlib
+${getConfigurationName("compile")} deps.kotlin.coroutinesCore
+${getConfigurationName("compile")} deps.kotlin.coroutinesAndroid
+</#if>
 </#macro>
 
 <#macro setKotlinVersion>

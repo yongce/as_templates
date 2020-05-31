@@ -1,7 +1,10 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
-    <#if generateKotlin>ext.kotlin_version = '${kotlinVersion}'</#if>
+    ext {
+        androidProjectCommon = "${rootDir}/android_project_common.gradle"
+        androidModuleCommon = "${rootDir}/android_module_common.gradle"
+    }
+    apply from: "${androidProjectCommon}"
+
     repositories {
         google()
         jcenter()
@@ -9,11 +12,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:${gradlePluginVersion}'
-        <#if generateKotlin>classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"</#if>
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        <#if generateKotlin>classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"</#if>
     }
+}
+
+// Add plugin for 'spotless'
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.27.1"
 }
 
 allprojects {
@@ -26,4 +31,17 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+spotless {
+<#if generateKotlin>
+    kotlin {
+        target "**/*.kt"
+        ktlint(versions.ktlint)
+    }
+</#if>
+}
+
+ext {
+    versions.ndkVersion = "21.0.6113669"
 }
